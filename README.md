@@ -27,8 +27,15 @@
 - Criar o Contato
 - Exportar Contatos
 - Remover Duplicatas
+- Alterar o número
 
-# Operações:
+## Operações:
 - Entrada e Saída do grupo
+- Mudança de número
 
+# Códigos Regex
+## Regex de entrada e saída:
+    ([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(\+55[\d\s-]*$)?
 
+## Regex de nome dos grupos:
+    Conversa do WhatsApp com (\[(\d{1,})\].*)
