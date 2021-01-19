@@ -1,0 +1,12 @@
+25/09/2020 12:47 - +55 89 9960-3810 entrou usando o link de convite deste grupo
+25/09/2020 12:53 - +55 18 99939-4220 entrou usando o link de convite deste grupo
+25/09/2020 13:03 - +55 44 93258-8530 entrou usando o link de convite deste grupo
+25/09/2020 13:03 - +55 48 94237-9740 entrou usando o link de convite deste grupo
+
+10/11/2020 13:38 - +55 44 93258-8530 mudou para +55 44 93258-8531
+13/11/2020 10:15 - +55 48 94237-9740 mudou para +55 48 94237-9741
+
+29/09/2020 12:38 - +55 18 99939-4220 saiu
+13/12/2020 18:06 - +55 48 94237-9741 saiu
+
+// 10 FICA / 20 SAI / 30 MUDA PARA (31) E FICA / 40 MUDA PARA (41) E SAI \\
