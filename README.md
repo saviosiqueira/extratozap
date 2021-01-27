@@ -35,7 +35,7 @@
 
 # Códigos Regex
 ## Regex de entrada e saída:
-    ([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(\+55[\d\s-]*$)?
+    ([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(?:(\+55[\d\s-]*)$)?
     Resultado esperado do regex:
         Grupo 1: Horário da ação
         Grupo 2: Número do telefone

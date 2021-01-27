@@ -4,6 +4,7 @@ import os
 from pprint import pprint
 #"import re" para importar a library de regex
 import re
+from toolz import unique
 
 class Grupo:
     def __init__(self, arquivo):
@@ -25,14 +26,14 @@ class Grupo:
         return nome, numero
 
     def exportar_contatos(self):
-        ...
+        Aluno.exportar_contatos(f'Alunos do grupo {self.numero}', self.alunos)
     
     def importar_grupos():
         caminho_conversas = 'arquivos' + os.path.sep
         return glob(caminho_conversas + '*.txt')
     
-    def remover_duplicados(grupos):
-        ...
+    def remover_duplicados(self):
+        self.alunos = Aluno.remover_duplicados(self.alunos)
 
 class Operacao(Enum):
     ENTRADA = 1
@@ -45,23 +46,26 @@ class Aluno:
         self.presente = True
 
     def extrair_alunos(arquivo):
-        padrao_aluno = r"([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(\+55[\d\s-]*$)?"
+        padrao_aluno = r"([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(?:(\+55[\d\s-]*)$)?"
         lista_alunos = []
 
         with open(arquivo, encoding='UTF-8') as arq:
             conversa = arq.readlines()
         
         for linha in conversa:
-            resultado = re.search(padrao_aluno, linha, re.MULTILINE)
+            resultado = re.search(padrao_aluno, linha)
 
             if resultado != None:
                 horario = resultado.group(1)
-                numero = resultado.group(2)
+                numero = resultado.group(2).replace("\xa0", ' ') #O replace \xa0 serve pra remover o Non-Breaking Space da string numero
                 operacao = resultado.group(3)
                 novo_numero = resultado.group(4)
 
+                #Faz o replace do nbsp no novo numero caso a string não seja vazia
+                if novo_numero is not None: novo_numero.replace("\xa0", ' ')
+
                 #Print de teste para ver se os dados foram pegos corretamente
-                print("||", horario, '-', numero, operacao, (novo_numero if novo_numero is not None else ' '))
+                #print("||", horario, '---', numero, '---', operacao, (novo_numero if novo_numero is not None else ' '))
 
                 if novo_numero is not None:
                     for aluno in lista_alunos:
@@ -75,10 +79,8 @@ class Aluno:
                     for aluno in lista_alunos:
                         if aluno.numero == numero:
                             aluno.entrada_saida(Operacao.SAIDA, horario)
-
-
-
-
+                
+        return lista_alunos
 
     def alterar_numero(self, novo_numero):
         self.numero = novo_numero
@@ -91,9 +93,11 @@ class Aluno:
             self.data_entrada = horario
         else:
             self.data_saida = horario
+            presente = False
 
     def remover_duplicados(lista_alunos):
-        ...
+        return list(unique(lista_alunos, key=lambda aluno: aluno.numero))
+
     def exportar_contatos(arquivo, lista_alunos):
         ...
         
@@ -102,7 +106,7 @@ class Aluno:
 if __name__ == '__main__':
     arquivos_grupos = Grupo.importar_grupos()
 
-    arquivos_grupo = arquivos_grupos[0]
+    #arquivos_grupo = arquivos_grupos[0]
     #pprint(arquivos_grupo)
 
     #grupo = Grupo(arquivos_grupo)
@@ -111,4 +115,6 @@ if __name__ == '__main__':
     for grupo in arquivos_grupos:
         grupo = Grupo(grupo)
         pprint(f'Grupo: {grupo.nome} - Número: {grupo.numero}')
-    
+
+        for aluno in grupo.alunos:
+            print(aluno.numero)
