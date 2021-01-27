@@ -36,6 +36,14 @@
 # Códigos Regex
 ## Regex de entrada e saída:
     ([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(\+55[\d\s-]*$)?
+    Resultado esperado do regex:
+        Grupo 1: Horário da ação
+        Grupo 2: Número do telefone
+        Grupo 3: Ação realizada
+        Grupo 4: (Opcional) Novo telefone
 
 ## Regex de nome dos grupos:
     Conversa do WhatsApp com (\[(\d{1,})\].*)
+    Resultado esperado do regex:
+        Grupo 1: Nome completo do grupo (incluindo número)
+        Grupo 2: Número do grupo
