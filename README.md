@@ -7,9 +7,9 @@
 - Arquivo
 - Nome
 - Numero
-- Usuários
+- Alunos
 
-## Usuário possui:
+## Aluno possui:
 - Numero
 - Data de Entrada
 - Data de Saída (?)
@@ -21,8 +21,8 @@
 - Extrair o nome e número
 - Remover duplicatas
 
-## Usuario precisa:
-- Extrair usuarios
+## aluno precisa:
+- Extrair alunos
 - Controlar data de entrada e saída
 - Criar o Contato
 - Exportar Contatos
