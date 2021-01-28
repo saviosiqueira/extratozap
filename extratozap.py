@@ -4,7 +4,9 @@ import os
 from pprint import pprint
 #"import re" para importar a library de regex
 import re
+#toolz unique usado para retornar a lista de alunos sem nenhuma duplicata de forma simples
 from toolz import unique
+import csv
 
 class Grupo:
     def __init__(self, arquivo):
@@ -46,7 +48,7 @@ class Aluno:
         self.presente = True
 
     def extrair_alunos(arquivo):
-        padrao_aluno = r"([\d/ :]*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(?:(\+55[\d\s-]*)$)?"
+        padrao_aluno = r"([\d/ :].*) - (\+55[\d\s-]*)( entrou| saiu| mudou para )(?:(\+55[\d\s-]*)$)?"
         lista_alunos = []
 
         with open(arquivo, encoding='UTF-8') as arq:
@@ -61,8 +63,9 @@ class Aluno:
                 operacao = resultado.group(3)
                 novo_numero = resultado.group(4)
 
-                #Faz o replace do nbsp no novo numero caso a string não seja vazia
-                if novo_numero is not None: novo_numero.replace("\xa0", ' ')
+                #Faz o replace do nbsp e retira caracteres no final do numero caso a string não seja vazia
+                if novo_numero is not None: 
+                    novo_numero = novo_numero.replace("\xa0", ' ').rstrip()
 
                 #Print de teste para ver se os dados foram pegos corretamente
                 #print("||", horario, '---', numero, '---', operacao, (novo_numero if novo_numero is not None else ' '))
@@ -71,6 +74,7 @@ class Aluno:
                     for aluno in lista_alunos:
                         if aluno.numero == numero:
                             aluno.alterar_numero(novo_numero)                
+                            break
                 elif 'entrou' in operacao:
                     aluno = Aluno.criar_aluno(numero)
                     aluno.entrada_saida(Operacao.ENTRADA, horario)
@@ -79,6 +83,7 @@ class Aluno:
                     for aluno in lista_alunos:
                         if aluno.numero == numero:
                             aluno.entrada_saida(Operacao.SAIDA, horario)
+                            break
                 
         return lista_alunos
 
@@ -93,28 +98,47 @@ class Aluno:
             self.data_entrada = horario
         else:
             self.data_saida = horario
-            presente = False
+            self.presente = False
 
     def remover_duplicados(lista_alunos):
         return list(unique(lista_alunos, key=lambda aluno: aluno.numero))
 
-    def exportar_contatos(arquivo, lista_alunos):
-        ...
+    def exportar_contatos(nome_arquivo, lista_alunos):
+        if not os.path.isdir('contatos'):
+            os.mkdir('contatos')
+        
+        separador = os.path.sep
+        caminho_arquivo = os.path.join('contatos' + separador, f'{nome_arquivo}.csv')
+
+        with open(caminho_arquivo, 'w', newline='', encoding='UTF-8') as arq:
+            writer = csv.writer(arq)
+            writer.writerow(['Número do Aluno', 'Status', 'Data de Entrada', 'Data de Saída'])
+            for aluno in lista_alunos:
+                if aluno.presente:
+                    writer.writerow([aluno.numero, 'Continua no grupo', aluno.data_entrada])
+                else:
+                    writer.writerow([aluno.numero, 'Saiu do grupo', aluno.data_entrada, aluno.data_saida])
+        print(f'CSV \'{nome_arquivo}\' gerado na pasta \'{caminho_arquivo}\'')
         
 
 
 if __name__ == '__main__':
     arquivos_grupos = Grupo.importar_grupos()
-
-    #arquivos_grupo = arquivos_grupos[0]
-    #pprint(arquivos_grupo)
-
-    #grupo = Grupo(arquivos_grupo)
-    #print(f'Grupo: {grupo.nome} \n-Número: {grupo.numero}')
-
+    todos_alunos = []
     for grupo in arquivos_grupos:
         grupo = Grupo(grupo)
-        pprint(f'Grupo: {grupo.nome} - Número: {grupo.numero}')
 
         for aluno in grupo.alunos:
-            print(aluno.numero)
+            todos_alunos.append(aluno)
+
+        grupo.remover_duplicados()
+        grupo.exportar_contatos()
+
+        print(f'{len(grupo.alunos)} alunos foram exportados do grupo {grupo.numero}')
+
+    todos_alunos = Aluno.remover_duplicados(todos_alunos)
+    Aluno.exportar_contatos('Lista todos alunos', todos_alunos)
+
+    print('Todos os grupos exportados')
+    print(f'Total de Alunos exportados:', len(todos_alunos))
+    
