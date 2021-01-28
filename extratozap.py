@@ -118,7 +118,7 @@ class Aluno:
                     writer.writerow([aluno.numero, 'Continua no grupo', aluno.data_entrada])
                 else:
                     writer.writerow([aluno.numero, 'Saiu do grupo', aluno.data_entrada, aluno.data_saida])
-        print(f'CSV \'{nome_arquivo}\' gerado na pasta \'{caminho_arquivo}\'')
+        #print(f'CSV \'{nome_arquivo}\' gerado na pasta \'{caminho_arquivo}\'')
         
 
 
@@ -141,4 +141,3 @@ if __name__ == '__main__':
 
     print('Todos os grupos exportados')
     print(f'Total de Alunos exportados:', len(todos_alunos))
-    
