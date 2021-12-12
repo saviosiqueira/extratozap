@@ -18,7 +18,8 @@ class Grupo:
     def extrair_nome_numero(self):
         #Digitando padrão do regex de pesquisa de grupos em uma string:
         padrao_grupo = r"Conversa do WhatsApp com (\[(\d{1,})\].*)"
-        #Pesquisa no resultado os dados baseados no regex, e retorna na variavel resultado
+        #Pesquisa no resultado os dados baseados no regex, e retorna na variavel resultado, 
+        # PS: É preciso o re.MULTILINE para detectar finais de linhas
         resultado = re.search(padrao_grupo, self.arquivo, re.MULTILINE)
         
         #Atribui os dados nome e numero de acordo com os resultados pra cada variavel
